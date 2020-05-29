@@ -2,6 +2,7 @@
 
 ## Primeiro passo: Definir enviroments
 Abra o arquivo [.env](.env) com um editor de texto e edite o que achar pertinente.
+
 Aconselho alterar apenas o que esta definido com o sufixo **_DATA** que são os mapeamentos dos *volumes*	
 	
 ## Segundo passo: Buildar
