@@ -1,0 +1,61 @@
+version: '3'
+services:
+  postgres-dev:
+    image: postgres:latest
+    container_name: postgres-dev
+    environment:
+      POSTGRES_PASSWORD: ${MY_POSTGRES_PASSWORD}
+    ports:
+      - "${MY_POSTGRES_PORT}:5432"
+    volumes:
+      - ${MY_POSTGRES_DATA}:/var/lib/postgresql/data 
+    networks:
+      - developer-network
+      
+  pgadmin4-dev:
+    image: dpage/pgadmin4
+    container_name: pgadmin4-dev
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${MY_PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${MY_PGADMIN_DEFAULT_PASSWORD}      
+    ports:
+      - "${MY_PGADMIN_PORT}:80"
+    volumes:
+      - ${MY_PGADMIN_DATA}:/var/lib/pgadmin
+    depends_on:
+      - postgres-dev
+    networks:
+      - developer-network
+  
+  mongo-dev:
+    image: mongo:latest
+    container_name: mongo-dev
+    environment:      
+      MONGO_INITDB_ROOT_USERNAME: "${MY_MONGO_INITDB_ROOT_USERNAME}"      
+      MONGO_INITDB_ROOT_PASSWORD: "${MY_MONGO_INITDB_ROOT_PASSWORD}"
+    ports:
+      - "${MY_MONGO_PORT}:27017"
+    volumes:
+      - ${MY_MONGO_DATA}:/data/db 
+    networks:
+      - developer-network  
+      
+  rabbitmq-dev:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-dev
+    hostname: rabbitmq-dev
+    environment:      
+      RABBITMQ_DEFAULT_USER: "${MY_RABBITMQ_DEFAULT_USER}"      
+      RABBITMQ_DEFAULT_PASS: "${MY_RABBITMQ_DEFAULT_PASS}"
+    ports:
+      - "${MY_RABBITMQ_PORT}:5672"
+      - "${MY_RABBITMQ_PORT2}:15672"
+    volumes:      
+      - ${MY_RABBITMQ_DATA}:/var/lib/rabbitmq 
+      - ${MY_RABBITMQ_LOG}:/var/log/rabbitmq 
+    networks:
+      - developer-network        
+
+networks: 
+  developer-network:
+    driver: bridge
